@@ -84,6 +84,9 @@ class CreateUserResolver
             ->setAllowedTypes('businessName', ['null', 'string'])
             ->setAllowedTypes('bankAccountIBAN', ['string'])
             ->setAllowedTypes('bankAccountBIC', ['null', 'string'])
+            ->setNormalizer('bankAccountBIC', function (Options $options, $value) {
+                return is_null($value) ? '' : $value;
+            })
         ;
     }
 }

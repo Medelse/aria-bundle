@@ -75,6 +75,20 @@ class CreateUserResolverTest extends TestCase
         $this->assertEquals('123456789', $data['siren']);
     }
 
+    public function testBankAccountBICValueNormalizer()
+    {
+        $user = $this->getUser();
+        $user['bankAccountBIC'] = null;
+
+        $resolver = new CreateUserResolver();
+        $data = $resolver->resolve($user);
+
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('bankAccount', $data);
+        $this->assertArrayHasKey('BIC', $data['bankAccount']);
+        $this->assertEquals('', $data['bankAccount']['BIC']);
+    }
+
     /**
      *
      * PRIVATE
