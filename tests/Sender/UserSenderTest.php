@@ -38,6 +38,34 @@ class UserSenderTest extends TestCase
         $sender->createUser($this->getUser());
     }
 
+    public function testSendGetUserRequest()
+    {
+        $response = new MockResponse(json_encode(['response' => 'Good job']));
+        $httpClient = new MockHttpClient($response, 'https://example.com');
+
+        $sender = new UserSender($httpClient, '', 'ariaApiKey');
+        $response = $sender->getUser(1);
+
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('response', $response);
+        $this->assertEquals('Good job', $response['response']);
+    }
+
+    public function testSendGetUserRequestReturnsError()
+    {
+        $response = new MockResponse(json_encode([
+            'status' => '400',
+            'message' => 'Something\'s wrong',
+            'code' => 'BAD_REQUEST',
+        ]));
+        $httpClient = new MockHttpClient($response, 'https://example.com');
+
+        $sender = new UserSender($httpClient, '', 'ariaApiKey');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
+        $sender->getUser(1);
+    }
+
     /**
      *
      * PRIVATE
