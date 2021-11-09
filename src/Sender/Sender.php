@@ -19,6 +19,22 @@ abstract class Sender
         $this->ariaApiKey = $ariaApiKey;
     }
 
+    protected function sendGetRequest(string $path): array
+    {
+        $data = $this->httpClient->request(
+            'GET',
+            $this->ariaBaseUrl . $path,
+            [
+                'headers' => ['X-API-Key' => $this->ariaApiKey],
+            ]
+        );
+        $response = $data->toArray(false);
+
+        $this->checkResponseError($response);
+
+        return $response;
+    }
+
     protected function sendPostRequest(string $path, array $body): array
     {
         $data = $this->httpClient->request(
@@ -32,9 +48,7 @@ abstract class Sender
 
         $response = $data->toArray(false);
 
-        if (isset($response['status']) && isset($response['message']) && isset($response['code'])) {
-            throw new BadRequestException(sprintf('Error %s %s: %s', $response['status'], $response['code'], $response['message']));
-        }
+        $this->checkResponseError($response);
 
         return $response;
     }
@@ -57,10 +71,15 @@ abstract class Sender
 
         $response = $data->toArray(false);
 
+        $this->checkResponseError($response);
+
+        return $response;
+    }
+
+    protected function checkResponseError(array $response): void
+    {
         if (isset($response['status']) && isset($response['message']) && isset($response['code'])) {
             throw new BadRequestException(sprintf('Error %s %s: %s', $response['status'], $response['code'], $response['message']));
         }
-
-        return $response;
     }
 }
