@@ -1,10 +1,10 @@
 <?php
 
-namespace Medelse\AriaBundle\Sender;
+namespace Medelse\AriaBundle\Resource;
 
 use Medelse\AriaBundle\Resolver\KYC\SetDocumentResolver;
 
-class DocumentSender extends Sender
+class Document extends Resource
 {
     public const ID_KEY = 'ID';
 

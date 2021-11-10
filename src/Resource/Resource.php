@@ -1,12 +1,12 @@
 <?php
 
-namespace Medelse\AriaBundle\Sender;
+namespace Medelse\AriaBundle\Resource;
 
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-abstract class Sender
+abstract class Resource
 {
     protected HttpClientInterface $httpClient;
     protected string $ariaBaseUrl;
@@ -28,6 +28,7 @@ abstract class Sender
                 'headers' => ['X-API-Key' => $this->ariaApiKey],
             ]
         );
+
         $response = $data->toArray(false);
 
         $this->checkResponseError($response);
@@ -35,7 +36,7 @@ abstract class Sender
         return $response;
     }
 
-    protected function sendPostRequest(string $path, array $body): array
+    protected function sendPostRequest(string $path, array $body = []): array
     {
         $data = $this->httpClient->request(
             'POST',

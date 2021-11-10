@@ -1,29 +1,29 @@
 <?php
 
-namespace Medelse\AriaBundle\Tests\Sender;
+namespace Medelse\AriaBundle\Tests\Resource;
 
-use Medelse\AriaBundle\Sender\UserSender;
+use Medelse\AriaBundle\Resource\User as UserResource;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
-class UserSenderTest extends TestCase
+class UserTest extends TestCase
 {
-    public function testSendCreateUserRequest()
+    public function testCreateUser()
     {
         $response = new MockResponse(json_encode(['response' => 'Good job']));
         $httpClient = new MockHttpClient($response, 'https://example.com');
 
-        $sender = new UserSender($httpClient, '', 'ariaApiKey');
-        $response = $sender->createUser($this->getUser());
+        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $response = $userResource->createUser($this->getUser());
 
         $this->assertIsArray($response);
         $this->assertArrayHasKey('response', $response);
         $this->assertEquals('Good job', $response['response']);
     }
 
-    public function testSendCreateUserRequestReturnsError()
+    public function testCreateUserReturnsError()
     {
         $response = new MockResponse(json_encode([
             'status' => '400',
@@ -32,26 +32,26 @@ class UserSenderTest extends TestCase
         ]));
         $httpClient = new MockHttpClient($response, 'https://example.com');
 
-        $sender = new UserSender($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
-        $sender->createUser($this->getUser());
+        $userResource->createUser($this->getUser());
     }
 
-    public function testSendGetUserRequest()
+    public function testGetUserRequest()
     {
         $response = new MockResponse(json_encode(['response' => 'Good job']));
         $httpClient = new MockHttpClient($response, 'https://example.com');
 
-        $sender = new UserSender($httpClient, '', 'ariaApiKey');
-        $response = $sender->getUser(1);
+        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $response = $userResource->getUser(1);
 
         $this->assertIsArray($response);
         $this->assertArrayHasKey('response', $response);
         $this->assertEquals('Good job', $response['response']);
     }
 
-    public function testSendGetUserRequestReturnsError()
+    public function testGetUserReturnsError()
     {
         $response = new MockResponse(json_encode([
             'status' => '400',
@@ -60,10 +60,22 @@ class UserSenderTest extends TestCase
         ]));
         $httpClient = new MockHttpClient($response, 'https://example.com');
 
-        $sender = new UserSender($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
-        $sender->getUser(1);
+        $userResource->getUser(1);
+    }
+
+    public function testSendUserContractRequest()
+    {
+        $response = new MockResponse(json_encode(['id' => 1, 'email' => 'mail@mail.fr']));
+        $httpClient = new MockHttpClient($response, 'https://example.com');
+
+        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $response = $userResource->sendUserContract(1);
+
+        $this->assertIsArray($response);
+        $this->assertEquals(['id' => 1, 'email' => 'mail@mail.fr'], $response);
     }
 
     /**
