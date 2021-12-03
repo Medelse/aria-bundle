@@ -35,7 +35,7 @@ class DocumentTest extends TestCase
         $documentResource = new Document($httpClient, '', 'ariaApiKey');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
-        $response = $documentResource->sendDocumentId($this->getDocument(), 'ariaId');
+        $documentResource->sendDocumentId($this->getDocument(), 'ariaId');
     }
 
     /**

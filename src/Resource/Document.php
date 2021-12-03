@@ -3,6 +3,7 @@
 namespace Medelse\AriaBundle\Resource;
 
 use Medelse\AriaBundle\Resolver\KYC\SetDocumentResolver;
+use Symfony\Component\HttpFoundation\Request;
 
 class Document extends Resource
 {
@@ -24,6 +25,6 @@ class Document extends Resource
             self::SET_DOCUMENT_URL
         );
 
-        return $this->sendPutRequestFormData($path, $data);
+        return $this->sendRequestFormData(Request::METHOD_PUT, $path, $data);
     }
 }

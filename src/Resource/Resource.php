@@ -3,6 +3,7 @@
 namespace Medelse\AriaBundle\Resource;
 
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -54,12 +55,17 @@ abstract class Resource
         return $response;
     }
 
-    protected function sendPutRequestFormData(string $path, array $body): array
+    protected function sendRequestFormData(string $method, string $path, array $body): array
     {
+        $allowedMethods = [Request::METHOD_POST, Request::METHOD_PUT];
+        if (!in_array($method, $allowedMethods)) {
+            throw new \InvalidArgumentException(sprintf('Allowed http methods for function sendRequestFormData are %s', implode(', ', $allowedMethods)));
+        }
+
         $formData = new FormDataPart($body);
 
         $data = $this->httpClient->request(
-            'PUT',
+            $method,
             $this->ariaBaseUrl . $path,
             [
                 'headers' => array_merge(
