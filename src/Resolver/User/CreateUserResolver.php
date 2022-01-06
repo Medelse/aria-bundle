@@ -13,6 +13,14 @@ class CreateUserResolver
         $this->configureOptionsResolver($resolver);
         $data = $resolver->resolve($data);
 
+        $bankAccount = [];
+        if ($data['bankAccountIBAN']) {
+            $bankAccount['IBAN'] = $data['bankAccountIBAN'];
+        }
+        if ($data['bankAccountBIC']) {
+            $bankAccount['BIC'] = $data['bankAccountBIC'];
+        }
+
         return [
             'phone' => $data['phone'],
             'email' => $data['email'],
@@ -28,10 +36,7 @@ class CreateUserResolver
             ],
             'siren' => $data['siren'],
             'businessName' => $data['businessName'],
-            'bankAccount' => [
-                'IBAN' => $data['bankAccountIBAN'],
-                'BIC' => $data['bankAccountBIC'],
-            ],
+            'bankAccount' => $bankAccount,
         ];
     }
 
@@ -84,9 +89,6 @@ class CreateUserResolver
             ->setAllowedTypes('businessName', ['null', 'string'])
             ->setAllowedTypes('bankAccountIBAN', ['string'])
             ->setAllowedTypes('bankAccountBIC', ['null', 'string'])
-            ->setNormalizer('bankAccountBIC', function (Options $options, $value) {
-                return is_null($value) ? '' : $value;
-            })
         ;
     }
 }
