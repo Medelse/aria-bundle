@@ -18,6 +18,8 @@ class MedelseAriaExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('medelse.aria.base_url', $config['base_url']);
-        $container->setParameter('medelse.aria.api_key', $config['api_key']);
+        $container->setParameter('medelse.aria.client_id', $config['client_id']);
+        $container->setParameter('medelse.aria.client_secret', $config['client_secret']);
+        $container->setParameter('medelse.aria.audience', $config['audience']);
     }
 }

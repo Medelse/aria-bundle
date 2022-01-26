@@ -5,6 +5,7 @@ namespace Medelse\AriaBundle\Tests\Resource;
 use Medelse\AriaBundle\Resolver\Advance\CreateAdvanceResolver;
 use Medelse\AriaBundle\Resource\Advance;
 use Medelse\AriaBundle\Resource\Document;
+use Medelse\AriaBundle\Security\BearerGenerator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -16,8 +17,9 @@ class AdvanceTest extends TestCase
     {
         $response = new MockResponse(json_encode(['response' => 'Good job']));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $advanceResource = new Advance($httpClient, '', 'ariaApiKey');
+        $advanceResource = new Advance($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $response = $advanceResource->createAdvance($this->getAdvance(), 'ariaId');
 
         $this->assertIsArray($response);
@@ -33,8 +35,9 @@ class AdvanceTest extends TestCase
             'code' => 'BAD_REQUEST',
         ]));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $advanceResource = new Advance($httpClient, '', 'ariaApiKey');
+        $advanceResource = new Advance($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $advanceResource->createAdvance($this->getAdvance(), 'ariaId');
