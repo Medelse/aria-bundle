@@ -37,10 +37,15 @@ abstract class Resource
         return $response;
     }
 
-    protected function sendPostRequest(string $path, array $body = []): array
+    protected function sendPostOrPatchRequest(string $method, string $path, array $body = []): array
     {
+        $allowedMethods = [Request::METHOD_POST, Request::METHOD_PATCH];
+        if (!in_array($method, $allowedMethods)) {
+            throw new \InvalidArgumentException(sprintf('Allowed http methods for function sendPostOrPatchRequest are %s', implode(', ', $allowedMethods)));
+        }
+
         $data = $this->httpClient->request(
-            'POST',
+            $method,
             $this->ariaBaseUrl . $path,
             [
                 'json' => $body,

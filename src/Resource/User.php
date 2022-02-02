@@ -3,6 +3,8 @@
 namespace Medelse\AriaBundle\Resource;
 
 use Medelse\AriaBundle\Resolver\User\CreateUserResolver;
+use Medelse\AriaBundle\Resolver\User\UpdateUserResolver;
+use Symfony\Component\HttpFoundation\Request;
 
 class User extends Resource
 {
@@ -18,6 +20,7 @@ class User extends Resource
     public const CONTRACT_STATUS_COMPLETED_KEY = 'completed';
 
     public const CREATE_USER_URL = '/user';
+    public const UPDATE_USER_URL = '/user/{userId}';
     public const GET_USER_URL = '/user/{userId}';
     public const SEND_USER_CONTRACT_URL = '/user/{userId}/contract';
 
@@ -31,7 +34,25 @@ class User extends Resource
         $data = $createResolver->resolve($data);
         $path = self::CREATE_USER_URL;
 
-        return $this->sendPostRequest($path, $data);
+        return $this->sendPostOrPatchRequest(Request::METHOD_POST, $path, $data);
+    }
+
+    /**
+     * @param string $userId
+     * @param array  $data
+     * @return array The user updated
+     */
+    public function updateUser(string $userId, array $data): array
+    {
+        $updateResolver = new UpdateUserResolver();
+        $data = $updateResolver->resolve($data);
+        $path = str_replace(
+            '{userId}',
+            $userId,
+            self::UPDATE_USER_URL
+        );
+
+        return $this->sendPostOrPatchRequest(Request::METHOD_PATCH, $path, $data);
     }
 
     /**
@@ -57,6 +78,6 @@ class User extends Resource
             self::SEND_USER_CONTRACT_URL
         );
 
-        return $this->sendPostRequest($path);
+        return $this->sendPostOrPatchRequest(Request::METHOD_POST, $path);
     }
 }
