@@ -3,6 +3,7 @@
 namespace Medelse\AriaBundle\Tests\Resource;
 
 use Medelse\AriaBundle\Resource\User as UserResource;
+use Medelse\AriaBundle\Security\BearerGenerator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -14,8 +15,9 @@ class UserTest extends TestCase
     {
         $response = new MockResponse(json_encode(['response' => 'Good job']));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $response = $userResource->createUser($this->getUser());
 
         $this->assertIsArray($response);
@@ -31,8 +33,9 @@ class UserTest extends TestCase
             'code' => 'BAD_REQUEST',
         ]));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $userResource->createUser($this->getUser());
@@ -42,8 +45,9 @@ class UserTest extends TestCase
     {
         $response = new MockResponse(json_encode(['response' => 'Good job']));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $response = $userResource->getUser(1);
 
         $this->assertIsArray($response);
@@ -59,10 +63,44 @@ class UserTest extends TestCase
             'code' => 'BAD_REQUEST',
         ]));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
+        $userResource->getUser(1);
+    }
+
+    public function testGetUserReturns400Response()
+    {
+        $response = new MockResponse(
+            json_encode([
+                'message' => 'Something\'s wrong',
+                'code' => 'BAD_REQUEST',
+            ]),
+            ['http_code' => 400]
+        );
+        $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
+
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
+        $userResource->getUser(1);
+    }
+
+    public function testGetUserReturns500Response()
+    {
+        $response = new MockResponse(
+            json_encode([]),
+            ['http_code' => 500]
+        );
+        $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
+
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Error 500 : An unexpected error occured');
         $userResource->getUser(1);
     }
 
@@ -70,8 +108,9 @@ class UserTest extends TestCase
     {
         $response = new MockResponse(json_encode(['id' => 1, 'email' => 'mail@mail.fr']));
         $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, '', 'ariaApiKey');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
         $response = $userResource->sendUserContract(1);
 
         $this->assertIsArray($response);

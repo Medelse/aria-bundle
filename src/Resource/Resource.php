@@ -2,39 +2,41 @@
 
 namespace Medelse\AriaBundle\Resource;
 
+use Medelse\AriaBundle\Security\BearerGenerator;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 abstract class Resource
 {
-    protected HttpClientInterface $httpClient;
-    protected string $ariaBaseUrl;
-    protected string $ariaApiKey;
+    public const AUTH_METADATA_KEY = 'authorization';
 
-    public function __construct(HttpClientInterface $httpClient, string $ariaBaseUrl, string $ariaApiKey)
+    protected HttpClientInterface $httpClient;
+    protected BearerGenerator $bearerGenerator;
+    protected string $ariaBaseUrl;
+
+    public function __construct(HttpClientInterface $httpClient, BearerGenerator $bearerGenerator, string $ariaBaseUrl)
     {
         $this->httpClient = $httpClient;
+        $this->bearerGenerator = $bearerGenerator;
         $this->ariaBaseUrl = $ariaBaseUrl;
-        $this->ariaApiKey = $ariaApiKey;
     }
 
     protected function sendGetRequest(string $path): array
     {
-        $data = $this->httpClient->request(
-            'GET',
+        $response = $this->httpClient->request(
+            Request::METHOD_GET,
             $this->ariaBaseUrl . $path,
             [
-                'headers' => ['X-API-Key' => $this->ariaApiKey],
+                'headers' => [
+                    self::AUTH_METADATA_KEY => 'Bearer ' . $this->bearerGenerator->getBearerToken(),
+                ],
             ]
         );
 
-        $response = $data->toArray(false);
-
-        $this->checkResponseError($response);
-
-        return $response;
+        return $this->processResponse($response);
     }
 
     protected function sendPostOrPatchRequest(string $method, string $path, array $body = []): array
@@ -44,20 +46,18 @@ abstract class Resource
             throw new \InvalidArgumentException(sprintf('Allowed http methods for function sendPostOrPatchRequest are %s', implode(', ', $allowedMethods)));
         }
 
-        $data = $this->httpClient->request(
+        $response = $this->httpClient->request(
             $method,
             $this->ariaBaseUrl . $path,
             [
                 'json' => $body,
-                'headers' => ['X-API-Key' => $this->ariaApiKey],
+                'headers' => [
+                    self::AUTH_METADATA_KEY => 'Bearer ' . $this->bearerGenerator->getBearerToken(),
+                ],
             ]
         );
 
-        $response = $data->toArray(false);
-
-        $this->checkResponseError($response);
-
-        return $response;
+        return $this->processResponse($response);
     }
 
     protected function sendRequestFormData(string $method, string $path, array $body): array
@@ -69,29 +69,39 @@ abstract class Resource
 
         $formData = new FormDataPart($body);
 
-        $data = $this->httpClient->request(
+        $response = $this->httpClient->request(
             $method,
             $this->ariaBaseUrl . $path,
             [
                 'headers' => array_merge(
                     $formData->getPreparedHeaders()->toArray(),
-                    ['X-API-Key' => $this->ariaApiKey]
+                    [
+                        self::AUTH_METADATA_KEY => 'Bearer ' . $this->bearerGenerator->getBearerToken(),
+                    ]
                 ),
                 'body' => $formData->bodyToIterable(),
             ]
         );
 
-        $response = $data->toArray(false);
-
-        $this->checkResponseError($response);
-
-        return $response;
+        return $this->processResponse($response);
     }
 
-    protected function checkResponseError(array $response): void
+    protected function processResponse(ResponseInterface $response): array
     {
-        if (isset($response['status']) && isset($response['message']) && isset($response['code'])) {
-            throw new BadRequestException(sprintf('Error %s %s: %s', $response['status'], $response['code'], $response['message']));
+        $data = $response->toArray(false);
+
+        if (strpos((string)$response->getStatusCode(), '2') !== 0) {
+            $status  = isset($data['status']) ? $data['status'] : $response->getStatusCode();
+            $code    = isset($data['code']) ? $data['code'] : '';
+            $message = isset($data['message']) ? $data['message'] : 'An unexpected error occured';
+
+            throw new BadRequestException(sprintf('Error %s %s: %s', $status, $code, $message));
         }
+
+        if (isset($data['status']) && isset($data['message']) && isset($data['code'])) {
+            throw new BadRequestException(sprintf('Error %s %s: %s', $data['status'], $data['code'], $data['message']));
+        }
+
+        return $data;
     }
 }

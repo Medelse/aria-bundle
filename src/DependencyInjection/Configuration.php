@@ -14,7 +14,9 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('base_url')->end()
-                ->scalarNode('api_key')->end()
+                ->scalarNode('client_id')->end()
+                ->scalarNode('client_secret')->end()
+                ->scalarNode('audience')->end()
             ->end()
         ;
 
