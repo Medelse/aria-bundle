@@ -88,6 +88,9 @@ class CreateUserResolver
             })
             ->setAllowedTypes('businessName', ['null', 'string'])
             ->setAllowedTypes('bankAccountIBAN', ['string'])
+            ->setNormalizer('bankAccountIBAN', function (Options $options, $value) {
+                return strtoupper(str_replace(' ', '', $value));
+            })
             ->setAllowedTypes('bankAccountBIC', ['null', 'string'])
         ;
     }
