@@ -186,4 +186,18 @@ class UpdateUserResolverTest extends TestCase
         $this->assertArrayHasKey('country', $ariaData['address']);
         $this->assertEquals('usa', $ariaData['address']['country']);
     }
+
+    public function testBankAccountIBANWithLowerLettersAndSpaces()
+    {
+        $userData = [
+            'bankAccountIBAN' => 'fr14 3000 1019 0100 00z6 7067 032'
+        ];
+
+        $resolver = new UpdateUserResolver();
+        $data = $resolver->resolve($userData);
+
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('IBAN', $data);
+        $this->assertEquals('FR1430001019010000Z67067032', $data['IBAN']);
+    }
 }

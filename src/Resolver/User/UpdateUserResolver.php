@@ -144,6 +144,9 @@ class UpdateUserResolver
             })
             ->setAllowedTypes('businessName', ['null', 'string'])
             ->setAllowedTypes('bankAccountIBAN', ['null', 'string'])
+            ->setNormalizer('bankAccountIBAN', function (Options $options, $value) {
+                return strtoupper(str_replace(' ', '', $value));
+            })
         ;
     }
 }

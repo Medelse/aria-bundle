@@ -47,7 +47,7 @@ class CreateUserResolverTest extends TestCase
         $this->assertArrayHasKey('bankAccount', $data);
         $this->assertIsArray($data['bankAccount']);
         $this->assertArrayHasKey('IBAN', $data['bankAccount']);
-        $this->assertEquals('FR14 3000 1019 0100 00Z6 7067 032', $data['bankAccount']['IBAN']);
+        $this->assertEquals('FR1430001019010000Z67067032', $data['bankAccount']['IBAN']);
         $this->assertArrayHasKey('BIC', $data['bankAccount']);
         $this->assertEquals('DAEEFRPPCCT', $data['bankAccount']['BIC']);
     }
@@ -86,6 +86,20 @@ class CreateUserResolverTest extends TestCase
         $this->assertIsArray($data);
         $this->assertArrayHasKey('bankAccount', $data);
         $this->assertArrayNotHasKey('BIC', $data['bankAccount']);
+    }
+
+    public function testBankAccountIBANWithLowerLettersAndSpaces()
+    {
+        $user = $this->getUser();
+        $user['bankAccountBIC'] = 'fr14 3000 1019 0100 00z6 7067 032';
+
+        $resolver = new CreateUserResolver();
+        $data = $resolver->resolve($user);
+
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('bankAccount', $data);
+        $this->assertArrayHasKey('IBAN', $data['bankAccount']);
+        $this->assertEquals('FR1430001019010000Z67067032', $data['bankAccount']['IBAN']);
     }
 
     /**
