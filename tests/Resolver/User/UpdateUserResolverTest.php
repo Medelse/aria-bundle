@@ -117,7 +117,7 @@ class UpdateUserResolverTest extends TestCase
             'addressFirst' => '261 Turner Lane',
             'addressCity' => 'Woodsboro',
             'addressPostal' => '90011',
-            'addressCountry' => 'usa',
+            'addressCountry' => 'US',
         ];
         $resolver = new UpdateUserResolver();
         $ariaData = $resolver->resolve($userData);
@@ -145,7 +145,7 @@ class UpdateUserResolverTest extends TestCase
         $this->assertEquals('90011', $ariaData['address']['postal']);
 
         $this->assertArrayHasKey('country', $ariaData['address']);
-        $this->assertEquals('usa', $ariaData['address']['country']);
+        $this->assertEquals('US', $ariaData['address']['country']);
     }
 
     public function testUpdateAddressWithAllValues()
@@ -156,7 +156,7 @@ class UpdateUserResolverTest extends TestCase
             'addressCity' => 'Woodsboro',
             'addressRegion' => 'California',
             'addressPostal' => '90011',
-            'addressCountry' => 'usa',
+            'addressCountry' => 'US',
         ];
         $resolver = new UpdateUserResolver();
         $ariaData = $resolver->resolve($userData);
@@ -184,7 +184,7 @@ class UpdateUserResolverTest extends TestCase
         $this->assertEquals('90011', $ariaData['address']['postal']);
 
         $this->assertArrayHasKey('country', $ariaData['address']);
-        $this->assertEquals('usa', $ariaData['address']['country']);
+        $this->assertEquals('US', $ariaData['address']['country']);
     }
 
     public function testBankAccountIBANWithLowerLettersAndSpaces()

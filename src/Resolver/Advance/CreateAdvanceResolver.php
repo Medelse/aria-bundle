@@ -95,6 +95,9 @@ class CreateAdvanceResolver
                 return (string) $value;
             })
             ->setAllowedTypes('currency', ['string'])
+            ->setAllowedValues('currency', function ($value) {
+                return in_array($value, [self::CURRENCY_EUR]);
+            })
             ->setAllowedTypes('duration', ['numeric'])
             ->setNormalizer('duration', function (Options $options, $value) {
                 return (string) $value;

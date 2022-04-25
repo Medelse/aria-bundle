@@ -7,13 +7,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Advance extends Resource
 {
-    public const STATUS_PROCESSING = 'PROCESSING';
-    public const STATUS_REFUSED    = 'REFUSED';
-    public const STATUS_SENT       = 'SENT';
-    public const STATUS_FAILED     = 'FAILED';
-    public const STATUS_PENDING    = 'PENDING';
-    public const STATUS_PAID       = 'PAID';
-    public const STATUS_LATE       = 'LATE';
+    public const STATUS_PROCESSING = 'PROCESSING'; // We didn't check the advance yet.
+    public const STATUS_ACCEPTED   = 'ACCEPTED'; // We accepted your advance but did not make the payment yet.
+    public const STATUS_SENT       = 'SENT'; // The order has been transferred to our banking provider, the transaction is not yet on the SEPA network.
+    public const STATUS_PENDING    = 'PENDING'; // We accepted the advance, made the payment, and are waiting for the repayment.
+    public const STATUS_REFUSED    = 'REFUSED'; // We refused the advance because of the information filled or the end client solvability.
+    public const STATUS_PAID       = 'PAID'; // We received your payment.
+    public const STATUS_LATE       = 'LATE'; // Your payment is late.
+    public const STATUS_FAILED     = 'FAILED'; // We made the payment but it failed. Please contact us.
 
     public const CREATE_ADVANCE_URL = '/user/{userId}/advance';
     public const GET_ADVANCE_URL    = '/user/{userId}/advance/{advanceId}';
