@@ -2,6 +2,7 @@
 
 namespace Medelse\AriaBundle\Resolver\User;
 
+use Medelse\AriaBundle\Tool\ArrayFormatter;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,7 +22,7 @@ class CreateUserResolver
             $bankAccount['BIC'] = $data['bankAccountBIC'];
         }
 
-        return [
+        $dataToReturn = [
             'phone' => $data['phone'],
             'email' => $data['email'],
             'givenName' => $data['givenName'],
@@ -38,6 +39,8 @@ class CreateUserResolver
             'businessName' => $data['businessName'],
             'bankAccount' => $bankAccount,
         ];
+
+        return ArrayFormatter::removeNullValues($dataToReturn);
     }
 
     private function configureOptionsResolver(OptionsResolver $resolver): void
@@ -71,6 +74,9 @@ class CreateUserResolver
         $resolver
             ->setAllowedTypes('phone', ['null', 'string'])
             ->setAllowedTypes('email', ['string'])
+            ->setAllowedValues('email', function ($value) {
+                return filter_var($value, FILTER_VALIDATE_EMAIL);
+            })
             ->setAllowedTypes('givenName', ['null', 'string'])
             ->setAllowedTypes('familyName', ['null', 'string'])
             ->setAllowedTypes('addressFirst', ['string'])
@@ -79,6 +85,12 @@ class CreateUserResolver
             ->setAllowedTypes('addressRegion', ['null', 'string'])
             ->setAllowedTypes('addressPostal', ['string'])
             ->setAllowedTypes('addressCountry', ['string']) // Country code (ISO-3166-Alpha2)
+            ->setNormalizer('addressCountry', function (Options $options, $value) {
+                return strtoupper($value);
+            })
+            ->setAllowedValues('addressCountry', function ($value) {
+                return preg_match('/^[a-zA-Z]{2}$/', $value);
+            })
             ->setAllowedTypes('siren', ['null', 'string', 'numeric'])
             ->setNormalizer('siren', function (Options $options, $value) {
                 return is_string($value) ? str_replace(' ', '', $value) : $value;

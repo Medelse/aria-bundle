@@ -135,7 +135,7 @@ class UserTest extends TestCase
             'addressCity' => 'Austin',
             'addressRegion' => '',
             'addressPostal' => '05000',
-            'addressCountry' => 'zomb-land',
+            'addressCountry' => 'FR',
             'siren' => '123456789',
             'businessName' => 'My spooky company',
             'bankAccountIBAN' => 'FR14 3000 1019 0100 00Z6 7067 032',

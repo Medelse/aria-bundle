@@ -33,16 +33,12 @@ class CreateUserResolverTest extends TestCase
         $this->assertIsArray($data['address']);
         $this->assertArrayHasKey('first', $data['address']);
         $this->assertEquals('Pacific Playland', $data['address']['first']);
-        $this->assertArrayHasKey('second', $data['address']);
-        $this->assertEquals('', $data['address']['second']);
         $this->assertArrayHasKey('city', $data['address']);
         $this->assertEquals('Austin', $data['address']['city']);
-        $this->assertArrayHasKey('region', $data['address']);
-        $this->assertEquals('', $data['address']['region']);
         $this->assertArrayHasKey('postal', $data['address']);
         $this->assertEquals('05000', $data['address']['postal']);
         $this->assertArrayHasKey('country', $data['address']);
-        $this->assertEquals('zomb-land', $data['address']['country']);
+        $this->assertEquals('US', $data['address']['country']);
 
         $this->assertArrayHasKey('bankAccount', $data);
         $this->assertIsArray($data['bankAccount']);
@@ -102,6 +98,26 @@ class CreateUserResolverTest extends TestCase
         $this->assertEquals('FR1430001019010000Z67067032', $data['bankAccount']['IBAN']);
     }
 
+    public function testBadEmailValue()
+    {
+        $user = $this->getUser();
+        $user['addressCountry'] = 'zomb-land';
+
+        $resolver = new CreateUserResolver();
+        $this->expectException(InvalidOptionsException::class);
+        $resolver->resolve($user);
+    }
+
+    public function testBadAddressCountryValue()
+    {
+        $user = $this->getUser();
+        $user['email'] = 'this_is_not_a_valid_email';
+
+        $resolver = new CreateUserResolver();
+        $this->expectException(InvalidOptionsException::class);
+        $resolver->resolve($user);
+    }
+
     /**
      *
      * PRIVATE
@@ -120,7 +136,7 @@ class CreateUserResolverTest extends TestCase
             'addressCity' => 'Austin',
             'addressRegion' => '',
             'addressPostal' => '05000',
-            'addressCountry' => 'zomb-land',
+            'addressCountry' => 'us',
             'siren' => '123456789',
             'businessName' => 'My spooky company',
             'bankAccountIBAN' => 'FR14 3000 1019 0100 00Z6 7067 032',

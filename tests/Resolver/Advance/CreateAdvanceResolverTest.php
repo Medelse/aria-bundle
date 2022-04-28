@@ -108,6 +108,17 @@ class CreateAdvanceResolverTest extends TestCase
         $this->assertEquals('123456789', $data['customerSiren']);
     }
 
+    public function testBadCurrencyValue()
+    {
+        $date = (new \DateTime())->setTime(0, 0, 0);
+        $advance = $this->getAdvance($date);
+        $advance['currency'] = 'USD';
+
+        $resolver = new CreateAdvanceResolver();
+        $this->expectException(InvalidOptionsException::class);
+        $resolver->resolve($advance);
+    }
+
     /**
      *
      * PRIVATE

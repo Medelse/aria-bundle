@@ -94,6 +94,9 @@ class UpdateUserResolver
         $resolver
             ->setAllowedTypes('phone', ['null', 'string'])
             ->setAllowedTypes('email', ['null', 'string'])
+            ->setAllowedValues('email', function ($value) {
+                return filter_var($value, FILTER_VALIDATE_EMAIL);
+            })
             ->setAllowedTypes('givenName', ['null', 'string'])
             ->setAllowedTypes('familyName', ['null', 'string'])
             ->setAllowedTypes('addressFirst', ['null', 'string'])
@@ -127,7 +130,7 @@ class UpdateUserResolver
                         throw new MissingOptionsException('Options addressFirst, addressCity, addressPostal, addressCountry are required to update the address');
                     }
                 }
-                
+
                 return $value;
             })
             ->setAllowedTypes('addressSecond', ['null', 'string'])
@@ -135,6 +138,12 @@ class UpdateUserResolver
             ->setAllowedTypes('addressRegion', ['null', 'string'])
             ->setAllowedTypes('addressPostal', ['null', 'string'])
             ->setAllowedTypes('addressCountry', ['null', 'string']) // Country code (ISO-3166-Alpha2)
+            ->setNormalizer('addressCountry', function (Options $options, $value) {
+                return strtoupper($value);
+            })
+            ->setAllowedValues('addressCountry', function ($value) {
+                return null === $value || preg_match('/^[a-zA-Z]{2}$/', $value);
+            })
             ->setAllowedTypes('siren', ['null', 'string', 'numeric'])
             ->setNormalizer('siren', function (Options $options, $value) {
                 return is_string($value) ? str_replace(' ', '', $value) : $value;
