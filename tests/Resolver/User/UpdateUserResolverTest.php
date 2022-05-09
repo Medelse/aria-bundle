@@ -127,19 +127,17 @@ class UpdateUserResolverTest extends TestCase
         $this->assertArrayHasKey('address', $ariaData);
 
         $this->assertIsArray($ariaData['address']);
-        $this->assertCount(6, $ariaData['address']);
+        $this->assertCount(4, $ariaData['address']);
 
         $this->assertArrayHasKey('first', $ariaData['address']);
         $this->assertEquals('261 Turner Lane', $ariaData['address']['first']);
 
-        $this->assertArrayHasKey('second', $ariaData['address']);
-        $this->assertNull($ariaData['address']['second']);
+        $this->assertArrayNotHasKey('second', $ariaData['address']);
 
         $this->assertArrayHasKey('city', $ariaData['address']);
         $this->assertEquals('Woodsboro', $ariaData['address']['city']);
 
-        $this->assertArrayHasKey('region', $ariaData['address']);
-        $this->assertNull($ariaData['address']['region']);
+        $this->assertArrayNotHasKey('region', $ariaData['address']);
 
         $this->assertArrayHasKey('postal', $ariaData['address']);
         $this->assertEquals('90011', $ariaData['address']['postal']);
