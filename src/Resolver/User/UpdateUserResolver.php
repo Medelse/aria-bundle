@@ -51,14 +51,25 @@ class UpdateUserResolver
             || !empty($data['addressPostal'])
             || !empty($data['addressCountry'])
         ) {
-            $ariaData['address'] = [
-                'first' => $data['addressFirst'],
-                'second' => $data['addressSecond'],
-                'city' => $data['addressCity'],
-                'region' => $data['addressRegion'],
-                'postal' => $data['addressPostal'],
-                'country' => $data['addressCountry'],
-            ];
+            $ariaData['address'] = [];
+            if (!empty($data['addressFirst'])) {
+                $ariaData['address']['first'] = $data['addressFirst'];
+            }
+            if (!empty($data['addressSecond'])) {
+                $ariaData['address']['second'] = $data['addressSecond'];
+            }
+            if (!empty($data['addressCity'])) {
+                $ariaData['address']['city'] = $data['addressCity'];
+            }
+            if (!empty($data['addressRegion'])) {
+                $ariaData['address']['region'] = $data['addressRegion'];
+            }
+            if (!empty($data['addressPostal'])) {
+                $ariaData['address']['postal'] = $data['addressPostal'];
+            }
+            if (!empty($data['addressCountry'])) {
+                $ariaData['address']['country'] = $data['addressCountry'];
+            }
         }
 
         return $ariaData;
