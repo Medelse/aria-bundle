@@ -79,7 +79,7 @@ abstract class Resource
                         self::AUTH_METADATA_KEY => 'Bearer ' . $this->bearerGenerator->getBearerToken(),
                     ]
                 ),
-                'body' => $formData->bodyToIterable(),
+                'body' => $formData->bodyToString(),
             ]
         );
 
