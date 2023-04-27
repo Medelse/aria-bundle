@@ -27,4 +27,24 @@ class Document extends Resource
 
         return $this->sendRequestFormData(Request::METHOD_PUT, $path, $data);
     }
+
+    /**
+     * @param array $data array of document data
+     * @return array The document added information
+     */
+    public function sendDocumentsId(array $data, string $ariaId): array
+    {
+        $createResolver = new SetDocumentResolver();
+        $finalData = [];
+        foreach ($data as $dataItem) {
+            $finalData[] = $createResolver->resolve($dataItem);
+        }
+        $path = str_replace(
+            ['{userId}', '{type}'],
+            [$ariaId, self::ID_KEY],
+            self::SET_DOCUMENT_URL
+        );
+
+        return $this->sendRequestFormData(Request::METHOD_PUT, $path, $finalData);
+    }
 }
