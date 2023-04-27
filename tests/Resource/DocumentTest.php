@@ -25,6 +25,20 @@ class DocumentTest extends TestCase
         $this->assertEquals('Good job', $response['response']);
     }
 
+    public function testSendDocumentsId()
+    {
+        $response = new MockResponse(json_encode(['response' => 'Good job']));
+        $httpClient = new MockHttpClient($response, 'https://example.com');
+        $bearerGenerator = $this->createMock(BearerGenerator::class);
+
+        $documentResource = new Document($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $response = $documentResource->sendDocumentId([$this->getDocument(),$this->getDocument()], 'ariaId');
+
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('response', $response);
+        $this->assertEquals('Good job', $response['response']);
+    }
+
     public function testSendDocumentIdReturnsError()
     {
         $response = new MockResponse(json_encode([
