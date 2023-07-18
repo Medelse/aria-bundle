@@ -32,7 +32,7 @@ class DocumentTest extends TestCase
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
         $documentResource = new Document($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
-        $response = $documentResource->sendDocumentId([$this->getDocument(),$this->getDocument()], 'ariaId');
+        $response = $documentResource->sendDocumentsId([$this->getDocument(),$this->getDocument()], 'ariaId');
 
         $this->assertIsArray($response);
         $this->assertArrayHasKey('response', $response);
