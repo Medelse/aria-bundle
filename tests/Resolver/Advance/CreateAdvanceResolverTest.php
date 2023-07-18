@@ -20,7 +20,7 @@ class CreateAdvanceResolverTest extends TestCase
 
         $this->assertIsArray($data);
         $this->assertArrayHasKey('billDate', $data);
-        $this->assertEquals($date->format(\DateTimeInterface::ISO8601), $data['billDate']);
+        $this->assertEquals($date->format(\DateTimeInterface::ATOM), $data['billDate']);
         $this->assertArrayHasKey('amount', $data);
         $this->assertArrayHasKey('currency', $data);
         $this->assertArrayHasKey('duration', $data);

@@ -85,7 +85,7 @@ class CreateAdvanceResolver
             })
             ->setAllowedTypes('billDate', [\DateTimeInterface::class])
             ->setNormalizer('billDate', function (Options $options, $value) {
-                return $value->format(\DateTimeInterface::ISO8601);
+                return $value->format(\DateTimeInterface::ATOM);
             })
             ->setAllowedTypes('amount', ['numeric'])
             ->setAllowedValues('amount', function ($value) {
