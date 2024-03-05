@@ -17,7 +17,7 @@ class DocumentTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $documentResource = new Document($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $documentResource = new Document($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $response = $documentResource->sendDocumentId($this->getDocument(), 'ariaId');
 
         $this->assertIsArray($response);
@@ -31,7 +31,7 @@ class DocumentTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $documentResource = new Document($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $documentResource = new Document($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $response = $documentResource->sendDocumentsId([$this->getDocument(),$this->getDocument()], 'ariaId');
 
         $this->assertIsArray($response);
@@ -49,17 +49,11 @@ class DocumentTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $documentResource = new Document($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $documentResource = new Document($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $documentResource->sendDocumentId($this->getDocument(), 'ariaId');
     }
-
-    /**
-     *
-     * PRIVATE
-     *
-     */
 
     private function getDocument(): array
     {

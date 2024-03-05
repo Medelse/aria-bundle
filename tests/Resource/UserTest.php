@@ -17,7 +17,7 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $response = $userResource->createUser($this->getUser());
 
         $this->assertIsArray($response);
@@ -35,7 +35,7 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $userResource->createUser($this->getUser());
@@ -47,7 +47,7 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $response = $userResource->getUser(1);
 
         $this->assertIsArray($response);
@@ -65,7 +65,7 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $userResource->getUser(1);
@@ -83,7 +83,7 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $userResource->getUser(1);
@@ -98,7 +98,7 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 500 : An unexpected error occured');
         $userResource->getUser(1);
@@ -110,18 +110,12 @@ class UserTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $userResource = new UserResource($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $userResource = new UserResource($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $response = $userResource->sendUserContract(1);
 
         $this->assertIsArray($response);
         $this->assertEquals(['id' => 1, 'email' => 'mail@mail.fr'], $response);
     }
-
-    /**
-     *
-     * PRIVATE
-     *
-     */
 
     private function getUser(): array
     {
