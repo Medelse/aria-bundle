@@ -3,7 +3,6 @@
 namespace Medelse\AriaBundle\Resolver\Upload;
 
 use Symfony\Component\Mime\Part\DataPart;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UploadFileResolver
