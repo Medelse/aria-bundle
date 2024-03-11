@@ -60,7 +60,7 @@ class InvoiceTest extends TestCase
         $this->assertEquals(12, $response['id']);
     }
 
-    public function testUpdatenvoiceReturnsError()
+    public function testUpdateInvoiceReturnsError()
     {
         $response = new MockResponse(json_encode([
             'status' => '400',
