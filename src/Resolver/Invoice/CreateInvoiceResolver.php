@@ -2,6 +2,7 @@
 
 namespace Medelse\AriaBundle\Resolver\Invoice;
 
+use Medelse\AriaBundle\Enum\CurrencyEnum;
 use Medelse\AriaBundle\Tool\ArrayFormatter;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
@@ -9,15 +10,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CreateInvoiceResolver
 {
-    public const CURRENCY_EUR = 'EUR';
-    public const CURRENCY_GBP = 'GBP';
-    public const CURRENCY_USD = 'USD';
-    public const CURRENCIES = [
-        self::CURRENCY_EUR,
-        self::CURRENCY_GBP,
-        self::CURRENCY_USD,
-    ];
-
     public const OWNER_USER = 'user';
     public const OWNER_COMPANY = 'company';
     public const OWNERS = [
@@ -78,7 +70,7 @@ class CreateInvoiceResolver
         ]);
 
         $resolver->setDefaults([
-            'currency' => self::CURRENCY_EUR,
+            'currency' => CurrencyEnum::CURRENCY_EUR,
         ]);
 
         $resolver
@@ -107,7 +99,7 @@ class CreateInvoiceResolver
             })
             ->setAllowedTypes('currency', ['string'])
             ->setAllowedValues('currency', function ($value) {
-                return in_array($value, self::CURRENCIES);
+                return in_array($value, CurrencyEnum::CURRENCIES);
             })
             ->setAllowedTypes('invoiceDate', [\DateTimeInterface::class])
             ->setNormalizer('invoiceDate', function (Options $options, $value) {

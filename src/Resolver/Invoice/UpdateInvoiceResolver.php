@@ -2,6 +2,7 @@
 
 namespace Medelse\AriaBundle\Resolver\Invoice;
 
+use Medelse\AriaBundle\Enum\CurrencyEnum;
 use Medelse\AriaBundle\Tool\ArrayFormatter;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -59,7 +60,7 @@ class UpdateInvoiceResolver extends CreateInvoiceResolver
             })
             ->setAllowedTypes('currency', ['null', 'string'])
             ->setAllowedValues('currency', function ($value) {
-                return is_null($value) || in_array($value, self::CURRENCIES);
+                return is_null($value) || in_array($value, CurrencyEnum::CURRENCIES);
             })
             ->setAllowedTypes('invoiceDate', ['null', \DateTimeInterface::class])
             ->setNormalizer('invoiceDate', function (Options $options, $value) {
