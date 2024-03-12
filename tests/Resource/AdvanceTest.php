@@ -19,7 +19,7 @@ class AdvanceTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $advanceResource = new Advance($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $advanceResource = new Advance($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $response = $advanceResource->createAdvance($this->getAdvance(), 'ariaId');
 
         $this->assertIsArray($response);
@@ -37,17 +37,11 @@ class AdvanceTest extends TestCase
         $httpClient = new MockHttpClient($response, 'https://example.com');
         $bearerGenerator = $this->createMock(BearerGenerator::class);
 
-        $advanceResource = new Advance($httpClient, $bearerGenerator, 'clientId', 'clientSecret', 'https://api.sandbox.helloaria.eu');
+        $advanceResource = new Advance($httpClient, $bearerGenerator, 'https://api.sandbox.helloaria.eu');
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Error 400 BAD_REQUEST: Something\'s wrong');
         $advanceResource->createAdvance($this->getAdvance(), 'ariaId');
     }
-
-    /**
-     *
-     * PRIVATE
-     *
-     */
 
     private function getAdvance(): array
     {

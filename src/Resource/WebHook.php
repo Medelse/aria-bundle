@@ -12,8 +12,15 @@ class WebHook extends Resource
     public const EVENT_KYC_UPDATED = 'kyc.updated';
     public const EVENT_CONTRACT_CREATED = 'contract.created';
     public const EVENT_CONTRACT_UPDATED = 'contract.updated';
+    public const EVENT_LOAN_CREATED = 'loan.created';
+    public const EVENT_LOAN_UPDATED = 'loan.updated';
+    public const EVENT_LOAN_DELETED = 'loan.deleted';
+    public const EVENT_CREDIT_LIMIT_CREATED = 'credit-limit.created';
+    public const EVENT_CREDIT_LIMIT_UPDATED = 'credit-limit.updated';
+    public const EVENT_CREDIT_LIMIT_DELETED = 'credit-limit.deleted';
 
     public const CREATE_WEBHOOK_URL = '/subscriptions/webhook';
+    public const DELETE_WEBHOOK_URL = '/subscriptions/{subscriptionId}';
 
     /**
      * @param array $data
@@ -26,5 +33,15 @@ class WebHook extends Resource
         $path = self::CREATE_WEBHOOK_URL;
 
         return $this->sendPostOrPatchRequest(Request::METHOD_POST, $path, $data);
+    }
+
+    public function deleteSubscription(string $subscriptionId): array
+    {
+        $path = str_replace(
+            '{subscriptionId}',
+            $subscriptionId,
+            self::DELETE_WEBHOOK_URL
+        );
+        return $this->sendDeleteRequest($path);
     }
 }

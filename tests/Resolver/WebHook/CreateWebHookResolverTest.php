@@ -59,12 +59,6 @@ class CreateWebHookResolverTest extends TestCase
         $data = $resolver->resolve($webHookData);
     }
 
-    /**
-     *
-     * PRIVATE
-     *
-     */
-
     private function getWebHookData(): array
     {
         return [

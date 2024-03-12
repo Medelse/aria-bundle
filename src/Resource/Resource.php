@@ -39,6 +39,21 @@ abstract class Resource
         return $this->processResponse($response);
     }
 
+    protected function sendDeleteRequest(string $path): array
+    {
+        $response = $this->httpClient->request(
+            Request::METHOD_DELETE,
+            $this->ariaBaseUrl . $path,
+            [
+                'headers' => [
+                    self::AUTH_METADATA_KEY => 'Bearer ' . $this->bearerGenerator->getBearerToken(),
+                ],
+            ]
+        );
+
+        return $this->processResponse($response);
+    }
+
     protected function sendPostOrPatchRequest(string $method, string $path, array $body = []): array
     {
         $allowedMethods = [Request::METHOD_POST, Request::METHOD_PATCH];

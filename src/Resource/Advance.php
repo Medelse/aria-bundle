@@ -5,6 +5,9 @@ namespace Medelse\AriaBundle\Resource;
 use Medelse\AriaBundle\Resolver\Advance\CreateAdvanceResolver;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated use Invoices and Loans
+ */
 class Advance extends Resource
 {
     public const STATUS_PROCESSING = 'PROCESSING'; // We didn't check the advance yet.
