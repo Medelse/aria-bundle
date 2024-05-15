@@ -24,7 +24,7 @@ class SetDocumentResolver
         $this->configureOptionsResolver($resolver);
         $data = $resolver->resolve($data);
 
-        $document = new DataPart($data['document'], $data['fileName'], 'multipart/form-data');
+        $document = new DataPart($data['document'], $data['fileName'], $data['mimeType']);
         return [
             'document' => $document,
         ];
