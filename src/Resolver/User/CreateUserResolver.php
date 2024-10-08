@@ -2,6 +2,7 @@
 
 namespace Medelse\AriaBundle\Resolver\User;
 
+use Medelse\AriaBundle\Enum\BusinessTypeEnum;
 use Medelse\AriaBundle\Tool\ArrayFormatter;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,6 +39,7 @@ class CreateUserResolver
             'siren' => $data['siren'],
             'businessName' => $data['businessName'],
             'bankAccount' => $bankAccount,
+            'businessType' => $data['businessType'],
         ];
 
         return ArrayFormatter::removeNullValues($dataToReturn);
@@ -60,6 +62,7 @@ class CreateUserResolver
             'businessName',
             'bankAccountIBAN',
             'bankAccountBIC',
+            'businessType',
         ]);
 
         $resolver->setRequired([
@@ -69,6 +72,7 @@ class CreateUserResolver
             'addressPostal',
             'addressCountry',
             'bankAccountIBAN',
+            'businessType',
         ]);
 
         $resolver
@@ -104,6 +108,9 @@ class CreateUserResolver
                 return strtoupper(str_replace(' ', '', $value));
             })
             ->setAllowedTypes('bankAccountBIC', ['null', 'string'])
+            ->setAllowedValues('businessType', function ($value) {
+                return in_array($value, BusinessTypeEnum::getAllowedValues());
+            })
         ;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Medelse\AriaBundle\Tests\Resolver\User;
 
+use Medelse\AriaBundle\Enum\BusinessTypeEnum;
 use Medelse\AriaBundle\Resolver\User\CreateUserResolver;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -141,6 +142,7 @@ class CreateUserResolverTest extends TestCase
             'businessName' => 'My spooky company',
             'bankAccountIBAN' => 'FR14 3000 1019 0100 00Z6 7067 032',
             'bankAccountBIC' => 'DAEEFRPPCCT',
+            'businessType' => BusinessTypeEnum::INDIVIDUAL,
         ];
     }
 }
