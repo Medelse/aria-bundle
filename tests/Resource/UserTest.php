@@ -2,6 +2,7 @@
 
 namespace Medelse\AriaBundle\Tests\Resource;
 
+use Medelse\AriaBundle\Enum\BusinessTypeEnum;
 use Medelse\AriaBundle\Resource\User as UserResource;
 use Medelse\AriaBundle\Security\BearerGenerator;
 use PHPUnit\Framework\TestCase;
@@ -134,6 +135,7 @@ class UserTest extends TestCase
             'businessName' => 'My spooky company',
             'bankAccountIBAN' => 'FR14 3000 1019 0100 00Z6 7067 032',
             'bankAccountBIC' => 'DAEEFRPPCCT',
+            'businessType' => BusinessTypeEnum::INDIVIDUAL,
         ];
     }
 }
