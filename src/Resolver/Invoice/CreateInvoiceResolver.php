@@ -208,7 +208,6 @@ class CreateInvoiceResolver
 
         $resolver->setRequired([
             'email',
-            'phoneNumber',
         ]);
 
         $resolver
